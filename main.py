@@ -68,7 +68,7 @@ def get_weather(region):
     wind_dir = response["daily"][0]["windDirDay"]
     # 紫外线强度指数
     uvIndex = response["daily"][0]["uvIndex"]
-    return weather, tempMAX, tempMIN, wind_dir, uvIndex, sunrise, sunset
+    return weather, sunrise, sunset, tempMAX, tempMIN, wind_dir, uvIndex
 
 
 def get_indices(region):
@@ -144,7 +144,7 @@ def get_ciba():
     return note_ch, note_en
 
 
-def send_message(to_user, access_token, region_name, weather, tempMAX, tempMIN, wind_dir, uvIndex, text, category,
+def send_message(to_user, access_token, region_name, weather, sunrise, sunset, tempMAX, tempMIN, wind_dir, uvIndex, text, category,
                  note_ch, note_en):
     url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}".format(access_token)
     week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
@@ -181,6 +181,14 @@ def send_message(to_user, access_token, region_name, weather, tempMAX, tempMIN, 
             },
             "weather": {
                 "value": weather,
+                "color": get_color()
+            },
+             "sunrise": {
+                "value": sunrise,
+                "color": get_color()
+            },
+             "sunset": {
+                "value": sunset,
                 "color": get_color()
             },
             "tempMAX": {
@@ -267,7 +275,7 @@ if __name__ == "__main__":
     users = config["user"]
     # 传入地区获取天气信息
     region = config["region"]
-    weather, tempMAX, tempMIN, wind_dir, uvIndex, sunrise, sunset = get_weather(region)
+    weather, sunrise, sunset, tempMAX, tempMIN, wind_dir, uvIndex = get_weather(region)
     text, category = get_indices(region)
     note_ch = config["note_ch"]
     note_en = config["note_en"]
@@ -276,6 +284,6 @@ if __name__ == "__main__":
         note_ch, note_en = get_ciba()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, region, weather, tempMAX, tempMIN, wind_dir, uvIndex, sunrise, sunset, text, category, note_ch,
+        send_message(user, accessToken, region, weather, sunrise, sunset, tempMAX, tempMIN, wind_dir, uvIndex, text, category, note_ch,
                      note_en)
     os.system("pause")
