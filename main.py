@@ -57,6 +57,10 @@ def get_weather(region):
     fxDate = response["daily"][0]["fxDate"]
     # 天气
     weather = response["daily"][0]["textDay"]
+    # 日出时间
+    sunrise = response["daily"][0]["sunrise"]
+    # 日落时间
+    sunset = response["daily"][0]["sunset"]
     # 当前温度
     tempMAX = response["daily"][0]["tempMax"] + u"\N{DEGREE SIGN}" + "C"
     tempMIN = response["daily"][0]["tempMin"] + u"\N{DEGREE SIGN}" + "C"
@@ -64,7 +68,7 @@ def get_weather(region):
     wind_dir = response["daily"][0]["windDirDay"]
     # 紫外线强度指数
     uvIndex = response["daily"][0]["uvIndex"]
-    return weather, tempMAX, tempMIN, wind_dir, uvIndex
+    return weather, tempMAX, tempMIN, wind_dir, uvIndex, sunrise, sunset
 
 
 def get_indices(region):
@@ -263,7 +267,7 @@ if __name__ == "__main__":
     users = config["user"]
     # 传入地区获取天气信息
     region = config["region"]
-    weather, tempMAX, tempMIN, wind_dir, uvIndex = get_weather(region)
+    weather, tempMAX, tempMIN, wind_dir, uvIndex, sunrise, sunset = get_weather(region)
     text, category = get_indices(region)
     note_ch = config["note_ch"]
     note_en = config["note_en"]
@@ -272,6 +276,6 @@ if __name__ == "__main__":
         note_ch, note_en = get_ciba()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, region, weather, tempMAX, tempMIN, wind_dir, uvIndex, text, category, note_ch,
+        send_message(user, accessToken, region, weather, tempMAX, tempMIN, wind_dir, uvIndex, sunrise, sunset, text, category, note_ch,
                      note_en)
     os.system("pause")
