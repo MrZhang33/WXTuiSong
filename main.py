@@ -64,11 +64,7 @@ def get_weather(region):
     wind_dir = response["daily"][0]["windDirDay"]
     # 紫外线强度指数
     uvIndex = response["daily"][0]["uvIndex"]
-    # 日出时间
-    sunrise = response["daily"][0]["sunrise"]
-    # 日落时间
-    sunset = response["daily"][0]["sunset"]
-    return weather, tempMAX, tempMIN, wind_dir, uvIndex, sunrise, sunset
+    return weather, tempMAX, tempMIN, wind_dir, uvIndex
 
 
 def get_indices(region):
